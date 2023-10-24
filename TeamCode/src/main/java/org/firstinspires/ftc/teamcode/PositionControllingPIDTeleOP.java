@@ -11,16 +11,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp
 public class PositionControllingPIDTeleOP extends LinearOpMode {
     // constanti PIDa mojno huyarit' public static
-    double kp = 0.003, ki = 0.001, kd = 0.0;
+    double kp = 0.001, ki = 0.00, kd = 0.00;
 
     DcMotorEx motorLeft, motorRight;
     ElapsedTime timer;
-    PIDFController kakoytopid;
+//    PIDFController kakoytopid;
 
     @Override
     public void runOpMode()
     {
-        kakoytopid = new PIDFController(kp, ki, kd, 0);
+//        kakoytopid = new PIDFController(kp, ki, kd, 0);
         timer = new ElapsedTime();
 
         // init
@@ -33,13 +33,16 @@ public class PositionControllingPIDTeleOP extends LinearOpMode {
 
         while (opModeIsActive())
         {
+            if(gamepad1.a) motorLeft.setPower(0.0);
+
             double elapsedTime = timer.milliseconds() / 1000.0;
+            timer.reset();
 
 //            PIDR - потенциальный интегральный дифференцальный регулятор
-            double target = gamepad1.left_stick_x * 2240;
+            double target = gamepad1.left_stick_x * motorLeft.getMotorType().getTicksPerRev() * 2;
             double currentPosition = motorLeft.getCurrentPosition();
 
-            double powerGotovy = kakoytopid.calculate(currentPosition, target);//
+//            double powerGotovy = kakoytopid.calculate(currentPosition, target);//
 
             double error = target - currentPosition;
 
@@ -53,13 +56,13 @@ public class PositionControllingPIDTeleOP extends LinearOpMode {
 //            D
             double d = (error - prevError) / elapsedTime;
             prevError = error;
-
-//            double power = p * kp + i * ki + d * kd;
-            telemetry.addData("power", powerGotovy);
+//
+            double power = p * kp + i * ki + d * kd;
+            telemetry.addData("power", power);
             telemetry.addData("target", target);
             telemetry.addData("current",currentPosition );
             telemetry.update();
-            double power = powerGotovy;
+//            double power = powerGotovy;
             motorLeft.setPower(power);
 
             motorLeft.getCurrentPosition();
