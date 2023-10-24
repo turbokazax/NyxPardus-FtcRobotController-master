@@ -45,20 +45,20 @@ public class FTCLibChototamController extends LinearOpMode {
 
 
 //
-//            double error = target - currentPosition;
+            double error = target - currentPosition;
 //
-////            P
-//            double p = error;
-//
-////            I
-//            accum += error;
-//            double i = accum;
-//
-////            D
-//            double d = (error - prevError) / elapsedTime;
-//            prevError = error;
-//
-////            double power = p * kp + i * ki + d * kd;
+//            P
+            double p = error;
+
+//            I
+            accum += error;
+            double i = accum;
+
+//            D
+            double d = (error - prevError) / elapsedTime;
+            prevError = error;
+
+//            double power = p * kp + i * ki + d * kd;
             double power = powerGotovy;
             motorLeft.set(power);
         }
