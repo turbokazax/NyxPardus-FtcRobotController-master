@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -11,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp
 public class PositionControllingPIDTeleOP extends LinearOpMode {
     // constanti PIDa mojno huyarit' public static
-    double kp = 0.001, ki = 0.00, kd = 0.00;
+    double kp = 0.00305, ki = 500, kd = 0.001;
 
     DcMotorEx motorLeft, motorRight;
     ElapsedTime timer;
@@ -25,23 +26,30 @@ public class PositionControllingPIDTeleOP extends LinearOpMode {
 
         // init
         motorLeft = hardwareMap.get(DcMotorEx.class, "motor1");
+        motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         double accum = 0;
         double prevError = 0;
-
+        double coef = 3000.0;
+        double target = 0;
+        double prevTime = 0;
         waitForStart();
-
+        double prevPos = 0;
         while (opModeIsActive())
         {
             if(gamepad1.a) motorLeft.setPower(0.0);
 
             double elapsedTime = timer.milliseconds() / 1000.0;
             timer.reset();
+            prevTime = elapsedTime;
 
 //            PIDR - потенциальный интегральный дифференцальный регулятор
-            double target = gamepad1.left_stick_x * motorLeft.getMotorType().getTicksPerRev() * 2;
+            target += gamepad1.left_stick_x * coef * elapsedTime;
+            coef+=elapsedTime*20;
             double currentPosition = motorLeft.getCurrentPosition();
-
+            prevPos = currentPosition;
 //            double powerGotovy = kakoytopid.calculate(currentPosition, target);//
 
             double error = target - currentPosition;
@@ -61,11 +69,13 @@ public class PositionControllingPIDTeleOP extends LinearOpMode {
             telemetry.addData("power", power);
             telemetry.addData("target", target);
             telemetry.addData("current",currentPosition );
+//            double prevPos = currentPosition;
+//            double prevTime = elapsedTime;
+
+            telemetry.addData("ROC", (currentPosition-prevPos)/(elapsedTime - prevTime));
             telemetry.update();
 //            double power = powerGotovy;
             motorLeft.setPower(power);
-
-            motorLeft.getCurrentPosition();
         }
         // loop
     }
