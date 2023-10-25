@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp
 public class PositionControllingPIDTeleOP extends LinearOpMode {
     // constanti PIDa mojno huyarit' public static
-    double kp = 0.00305, ki = 500, kd = 0.001;
+    double kp = 0.0077, ki = 0.0, kd = 0.0004;
 
     DcMotorEx motorLeft, motorRight;
     ElapsedTime timer;
@@ -39,15 +39,15 @@ public class PositionControllingPIDTeleOP extends LinearOpMode {
         double prevPos = 0;
         while (opModeIsActive())
         {
-            if(gamepad1.a) motorLeft.setPower(0.0);
+//            if(gamepad1.a) motorLeft.setPower(0.0);
 
             double elapsedTime = timer.milliseconds() / 1000.0;
             timer.reset();
             prevTime = elapsedTime;
 
 //            PIDR - потенциальный интегральный дифференцальный регулятор
-            target += gamepad1.left_stick_x * coef * elapsedTime;
-            coef+=elapsedTime*20;
+            target += gamepad1.left_stick_x * 2400 * elapsedTime;
+//            coef+=elapsedTime*100;
             double currentPosition = motorLeft.getCurrentPosition();
             prevPos = currentPosition;
 //            double powerGotovy = kakoytopid.calculate(currentPosition, target);//

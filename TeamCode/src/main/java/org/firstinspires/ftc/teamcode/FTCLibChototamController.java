@@ -61,6 +61,7 @@ public class FTCLibChototamController extends LinearOpMode {
 //            double power = p * kp + i * ki + d * kd;
             double power = powerGotovy;
             motorLeft.set(power);
+
         }
         // loop
     }
