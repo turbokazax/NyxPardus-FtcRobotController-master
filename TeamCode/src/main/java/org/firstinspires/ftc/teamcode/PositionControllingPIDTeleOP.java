@@ -12,7 +12,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp
 public class PositionControllingPIDTeleOP extends LinearOpMode {
     // constanti PIDa mojno huyarit' public static
-    double kp = 0.0077, ki = 0.0, kd = 0.0004;
+    double kp = 0.008, ki = 0.0, kd = 0.0005;
+//    norm koefi: kp=0.008, ki=0.0, kd=0.0004 (problem: power <1)
 
     DcMotorEx motorLeft, motorRight;
     ElapsedTime timer;
