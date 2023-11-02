@@ -26,7 +26,7 @@ public class PositionControllingPIDTeleOP extends LinearOpMode {
         timer = new ElapsedTime();
 
         // init
-        motorLeft = hardwareMap.get(DcMotorEx.class, "motor1");
+        motorLeft = hardwareMap.get(DcMotorEx.class, "FLmotor");
         motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

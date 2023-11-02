@@ -23,7 +23,7 @@ public class FTCLibChototamController extends LinearOpMode {
         timer = new ElapsedTime();
 
         // init
-        motorLeft = new Motor(hardwareMap, "motor1");
+        motorLeft = new Motor(hardwareMap, "FLmotor");
         motorLeft.setRunMode(Motor.RunMode.VelocityControl);
 
         double accum = 0;

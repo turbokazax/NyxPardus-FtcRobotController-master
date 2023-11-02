@@ -29,10 +29,10 @@ public class zxcqweOpMode extends OpMode {
 
     // Declare OpMode members.
     private ElapsedTime timer = new ElapsedTime();
-    private DcMotorEx motor1 = null;
-    private DcMotorEx motor2 = null;
-    private DcMotorEx motor3 = null;
-    private DcMotorEx motor0 = null;
+    private DcMotorEx FLmotor = null;
+    private DcMotorEx BRmotor = null;
+    private DcMotorEx BLmotor = null;
+    private DcMotorEx FRmotor = null;
 
 
 
@@ -49,24 +49,24 @@ public class zxcqweOpMode extends OpMode {
         // step (using the FTC Robot Controller app on the phone).
 
         /*
-        motor0 -- left back
-        motor2 -- right back
-        motor3 -- left rear
-        motor1 -- right rear
+        FRmotor -- left back
+        BRmotor -- right back
+        BLmotor -- left rear
+        FLmotor -- right rear
          */
 
-        motor0 = hardwareMap.get(DcMotorEx.class, "motor0");
-        motor1 = hardwareMap.get(DcMotorEx.class, "motor1");
-        motor2 = hardwareMap.get(DcMotorEx.class, "motor2");
-        motor3 = hardwareMap.get(DcMotorEx.class, "motor3");
+        FRmotor = hardwareMap.get(DcMotorEx.class, "FRmotor");
+        FLmotor = hardwareMap.get(DcMotorEx.class, "FLmotor");
+        BRmotor = hardwareMap.get(DcMotorEx.class, "BRmotor");
+        BLmotor = hardwareMap.get(DcMotorEx.class, "BLmotor");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        motor1.setDirection(DcMotorEx.Direction.REVERSE);
-        motor3.setDirection(DcMotorEx.Direction.REVERSE);
-        motor0.setDirection(DcMotor.Direction.FORWARD);
-        motor2.setDirection(DcMotor.Direction.FORWARD);
+        FLmotor.setDirection(DcMotorEx.Direction.REVERSE);
+        BLmotor.setDirection(DcMotorEx.Direction.REVERSE);
+        FRmotor.setDirection(DcMotor.Direction.FORWARD);
+        BRmotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -114,10 +114,10 @@ public class zxcqweOpMode extends OpMode {
          rightPower = gamepad1.right_stick_y ;
 
         // Send calculated power to wheels
-        motor1.setPower(leftPower);
-        motor0.setPower(rightPower);
-        motor3.setPower(leftPower);
-        motor2.setPower(rightPower);
+        FLmotor.setPower(getPIDPower(FLmotor));
+//        FRmotor.setPower(rightPower);
+//        BLmotor.setPower(leftPower);
+//        BRmotor.setPower(rightPower);
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + timer.toString());
         telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
@@ -130,7 +130,7 @@ public class zxcqweOpMode extends OpMode {
     public void stop() {
     }
 
-    private void setPID(DcMotorEx motorLeft){
+    private double getPIDPower(DcMotorEx motorLeft){
         double accum = 0;
         double prevError = 0;
         double coef = 3000.0;
@@ -163,16 +163,16 @@ public class zxcqweOpMode extends OpMode {
         prevError = error;
 //
         double power = p * kp + i * ki + d * kd;
-        telemetry.addData("power", power);
-        telemetry.addData("target", target);
-        telemetry.addData("current",currentPosition );
+//        telemetry.addData("power", power);
+//        telemetry.addData("target", target);
+//        telemetry.addData("current",currentPosition );
 //            double prevPos = currentPosition;
 //            double prevTime = elapsedTime;
 
         //          telemetry.addData("ROC", (currentPosition-prevPos)/(elapsedTime - prevTime));
         telemetry.update();
 //            double power = powerGotovy;
-        motorLeft.setPower(power);
+        return power;
     }
 }
 
