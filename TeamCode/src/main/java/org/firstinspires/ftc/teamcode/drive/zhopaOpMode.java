@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp
 public class zhopaOpMode extends OpMode {
 
-    public static double kp=0.0, ki = 0.0, kd = 0.0;
+    public static double kp = 0.0, ki = 0.0, kd = 0.0;
     public static double velocity = 0.0;
 
     private Motor FRmotor = null; // LEFT RIGHT
@@ -25,8 +25,6 @@ public class zhopaOpMode extends OpMode {
     private PIDFController pidFL;
     private PIDFController pidBR;
     private PIDFController pidBL;
-
-
 
 
     @Override
@@ -56,17 +54,42 @@ public class zhopaOpMode extends OpMode {
 
     }
 
-    private void updateMotion(){
+    private void updateMotion() {
         double leftPower;
         double rightPower;
-        double forward = -gamepad1.left_stick_y;
+        /*double forward = -gamepad1.left_stick_y;
         double lateral = -gamepad1.left_stick_x;
         double turn = -gamepad1.right_stick_x;
         double FRpower = forward + lateral + turn;
         double FLpower = forward - lateral - turn;
         double BRpower = forward - lateral + turn;
         double BLpower = forward + lateral - turn;
-        drive.driveRobotCentric(lateral, forward, turn);
+        drive.driveRobotCentric(lateral, forward, turn);*/
+
+        double x = gamepad1.left_stick_x;
+        double y = -gamepad1.left_stick_y;
+        double turn = gamepad1.right_stick_x;
+        double theta = Math.atan2(y, x);
+        double power = Math.hypot(x, y);
+        double sin = Math.sin(theta - Math.PI/4);
+        double cos = Math.cos(theta - Math.PI/4);
+        double max = Math.max(Math.abs(sin), Math.abs(cos));
+        double leftFront = power*cos/max + turn;
+        double rightFront = power*sin/max - turn;
+        double leftRear = power*sin/max + turn;
+        double rightRear = power*cos/max - turn;
+
+        if((power+Math.abs(turn))>1){
+            leftFront /= power + turn;
+            rightFront /= power + turn;
+            leftRear /= power + turn;
+            rightRear /= power + turn;
+        }
+
+        FLmotor.set(leftFront);
+        FRmotor.set(rightFront);
+        BLmotor.set(leftRear);
+        BRmotor.set(rightRear);
         //telemetry:
 //        double FRmotorVel = FRmotor.getCorrectedVelocity();
 //        double FLmotorVel = FLmotor.getCorrectedVelocity();
