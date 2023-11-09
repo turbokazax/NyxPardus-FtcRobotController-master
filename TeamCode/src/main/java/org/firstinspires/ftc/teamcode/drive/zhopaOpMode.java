@@ -55,8 +55,8 @@ public class zhopaOpMode extends OpMode {
     }
 
     private void updateMotion() {
-        double leftPower;
-        double rightPower;
+//        double leftPower;
+//        double rightPower;
         /*double forward = -gamepad1.left_stick_y;
         double lateral = -gamepad1.left_stick_x;
         double turn = -gamepad1.right_stick_x;
